@@ -5,10 +5,13 @@ RUN apk --no-cache add gettext ca-certificates openssl \
     && chmod a+x /usr/local/bin/kubectl /usr/local/bin/dumb-init \
     && apk --no-cache del ca-certificates openssl
 
-RUN apk --no-cache add git ncurses
+RUN apk --no-cache add git ncurses bash-completion
 RUN mkdir /opt && cd /opt && git clone https://github.com/ahmetb/kubectx && \
   ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx && \
   ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+
+RUN echo "source <(kubectl completion bash)" >> ~/.bashrc
+RUN echo "source /etc/profile" >> ~/.bashrc
 
 ENTRYPOINT ["/usr/local/bin/dumb-init","--","/usr/local/bin/docker-entrypoint.sh"]
 CMD ["bash"]
