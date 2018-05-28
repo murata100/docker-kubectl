@@ -4,5 +4,11 @@ RUN apk --no-cache add gettext ca-certificates openssl \
     && wget https://storage.googleapis.com/kubernetes-release/release/v1.9.7/bin/linux/amd64/kubectl -O /usr/local/bin/kubectl \
     && chmod a+x /usr/local/bin/kubectl /usr/local/bin/dumb-init \
     && apk --no-cache del ca-certificates openssl
+
+RUN apk --no-cache add git ncurses
+RUN mkdir /opt && cd /opt && git clone https://github.com/ahmetb/kubectx && \
+  ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx && \
+  ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+
 ENTRYPOINT ["/usr/local/bin/dumb-init","--","/usr/local/bin/docker-entrypoint.sh"]
 CMD ["bash"]
